@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Application;
 use App\Entity\Mission;
 use App\Entity\StatusApplication;
+use App\Entity\StatusMission;
 use App\Entity\User;
 use App\Form\ApplicationType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -56,12 +57,87 @@ class ApplicationController extends AbstractController
     }
 
     #[Route('/application/{id}', name: 'app_application_show')]
-    #[IsGranted('ROLE_FREELANCE')]
     public function show(Application $application): Response
     {
+        $isApplicant = $application->getUser() === $this->getUser();
+        $isMissionOwner = $application->getMission()->getUser() === $this->getUser();
+
+        if (!$isApplicant && !$isMissionOwner) {
+            throw $this->createAccessDeniedException('Cette candidature ne vous concerne pas.');
+        }
+
         return $this->render('application/show.html.twig', [
             'application' => $application,
             'mission' => $application->getMission(),
         ]);
+    }
+
+    #[Route('/profile/applications', name: 'app_application_index')]
+    #[IsGranted('ROLE_FREELANCE')]
+    public function list(EntityManagerInterface $emi): Response
+    {
+        $applications = $emi->getRepository(Application::class)->findBy([
+            'user' => $this->getUser(),
+        ]);
+
+        return $this->render('application/list.html.twig', [
+            'applications' => $applications,
+        ]);
+    }
+
+    #[Route('/mission/{id}/applications', name: 'app_mission_applications')]
+    #[IsGranted('ROLE_CLIENT')]
+    public function listByMission(Mission $mission, EntityManagerInterface $emi): Response
+    {
+        if ($mission->getUser() !== $this->getUser()) {
+            throw $this->createAccessDeniedException('Cette mission ne vous appartient pas.');
+        }
+
+        $applications = $emi->getRepository(Application::class)->findBy([
+            'mission' => $mission,
+        ]);
+
+        return $this->render('application/by_mission.html.twig', [
+            'mission' => $mission,
+            'applications' => $applications,
+        ]);
+    }
+
+    #[Route('/application/validate/{id}', name: 'app_application_validate')]
+    #[IsGranted('ROLE_CLIENT')]
+    public function validate(Application $application, EntityManagerInterface $emi): Response
+    {
+        if ($application->getMission()->getUser() !== $this->getUser()) {
+            throw $this->createAccessDeniedException('Cette candidature ne vous appartient pas.');
+        }
+
+        $statusValideApplication = $emi->getRepository(StatusApplication::class)
+            ->findOneBy(['label' => 'acceptée']);
+        $application->setStatusApplication($statusValideApplication);
+
+        $statusEnCoursMission = $emi->getRepository(StatusMission::class)
+            ->findOneBy(['label' => 'en cours']);
+        $application->getMission()->setStatusMission($statusEnCoursMission);
+
+        $emi->flush();
+
+        return $this->redirectToRoute('app_mission_applications', ['id' => $application->getMission()->getId()]);
+    }
+
+    #[Route('/application/reject/{id}', name: 'app_application_reject')]
+    #[IsGranted('ROLE_CLIENT')]
+    public function reject(Application $application, EntityManagerInterface $emi): Response
+    {
+        if ($application->getMission()->getUser() !== $this->getUser()) {
+            throw $this->createAccessDeniedException('Cette candidature ne vous appartient pas.');
+        }
+
+        $statusRejeteApplication = $emi->getRepository(StatusApplication::class)
+            ->findOneBy(['label' => 'rejetée']);
+        $application->setStatusApplication($statusRejeteApplication);
+
+        $emi->flush();
+
+        return $this->redirectToRoute('app_mission_applications', ['id' => $application->getMission()->getId()]);
     }
 }

@@ -15,6 +15,7 @@
             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ mission.id) }}">
             <button class="btn">Supprimer la mission</button>
         </form>
+        <a href="{{ path('app_mission_applications', {'id': mission.id}) }}">Voir les candidatures</a>
     {% endif %}
     
     {% set alreadyApplied = false %}

@@ -6,12 +6,14 @@
     <h1>Liste des missions</h1>
     <ul>
         {% for mission in missions %}
+        {% if mission.statusMission.label == 'en attente' %}
             <li>
                 <a href="{{ path('app_mission_show', {'id': mission.id}) }}">{{ mission.title }}</a>
                 - Budget : {{ mission.budget }} €
                 - Date limite : {{ mission.deadline|date('d/m/Y') }}
                 - Langue : {{ mission.language }}
             </li>
+        {% endif %}
         {% else %}
             <li>Aucune mission disponible pour le moment.</li>
         {% endfor %}
