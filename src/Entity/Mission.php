@@ -46,7 +46,7 @@ class Mission
 
     #[ORM\ManyToOne(inversedBy: 'mission')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user_id = null;
+    private ?User $user = null;
 
     /**
      * @var Collection<int, Application>
@@ -181,12 +181,12 @@ class Mission
 
     public function getUserId(): ?User
     {
-        return $this->user_id;
+        return $this->user;
     }
 
     public function setUserId(?User $user_id): static
     {
-        $this->user_id = $user_id;
+        $this->user = $user_id;
 
         return $this;
     }
