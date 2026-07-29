@@ -88,7 +88,7 @@ class MissionController extends AbstractController
     public function index(EntityManagerInterface $emi): Response
     {
         return $this->render('mission/index.html.twig', [
-            'missions' => $emi->getRepository(Mission::class)->findAll(),
+            'missions' => $emi->getRepository(Mission::class)->findOpenMissions(),
         ]);
     }
 }
