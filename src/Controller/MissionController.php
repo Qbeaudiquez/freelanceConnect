@@ -28,7 +28,7 @@ class MissionController extends AbstractController
         $mission->setStatusMission($statusEnAttente);
         $mission->setAdvanceRate(0);
         $mission->setCreatedAt(new \DateTimeImmutable());
-        $user = $this->getUser() ?? $emi->getRepository(User::class)->find(1);
+        $user = $this->getUser();
         $mission->setUser($user);
 
         if ($form->isSubmitted() && $form->isValid()) {
