@@ -1,21 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}Liste des missions{% endblock %}
 
 {% block body %}
-    <h1>Bienvenue sur FreelanceConnect</h1>
-    <h2>Liste des missions</h2>
+    <h1>Liste des missions</h1>
     <ul>
         {% for mission in missions %}
-        {% if mission.statusMission.label == 'en attente' %}
             <li>
                 <a href="{{ path('app_mission_show', {'id': mission.id}) }}">{{ mission.title }}</a>
                 - Budget : {{ mission.budget }} €
                 - Date limite : {{ mission.deadline|date('d/m/Y') }}
                 - Langue : {{ mission.language }}
             </li>
-        {% endif %}
         {% else %}
             <li>Aucune mission disponible pour le moment.</li>
         {% endfor %}
+    </ul>
 {% endblock %}

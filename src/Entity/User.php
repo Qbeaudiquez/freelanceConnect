@@ -234,7 +234,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->missions->contains($mission)) {
             $this->missions->add($mission);
-            $mission->setUserId($this);
+            $mission->setUser($this);
         }
 
         return $this;
@@ -244,8 +244,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->missions->removeElement($mission)) {
             // set the owning side to null (unless already changed)
-            if ($mission->getUserId() === $this) {
-                $mission->setUserId(null);
+            if ($mission->getUser() === $this) {
+                $mission->setUser(null);
             }
         }
 

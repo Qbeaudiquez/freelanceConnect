@@ -16,6 +16,15 @@ class MissionRepository extends ServiceEntityRepository
         parent::__construct($registry, Mission::class);
     }
 
+    public function findFiveLatestMissions(): array
+    {
+        return $this->createQueryBuilder('m')
+            ->orderBy('m.id', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Mission[] Returns an array of Mission objects
 //     */

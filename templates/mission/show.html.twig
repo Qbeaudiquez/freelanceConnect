@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Voir la mission{% endblock %}
+
+{% block body %}
+    <h1>{{ mission.title }}</h1>
+    <p>{{ mission.description }}</p>
+    <p>Budget : {{ mission.budget }} €</p>
+    <p>Date limite : {{ mission.deadline|date('d/m/Y') }}</p>
+    <p>Langue : {{ mission.language }}</p>
+
+    {% if app.user and app.user.id == mission.user.id %} 
+        <a href="{{ path('app_mission_edit', {'id': mission.id}) }}">Modifier la mission</a>
+        <form method="post" action="{{ path('app_mission_delete', {'id': mission.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette mission ?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ mission.id) }}">
+            <button class="btn">Supprimer la mission</button>
+        </form>
+    {% endif %} 
+{% endblock %}
