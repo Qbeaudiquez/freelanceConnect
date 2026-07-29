@@ -15,5 +15,21 @@
             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ mission.id) }}">
             <button class="btn">Supprimer la mission</button>
         </form>
-    {% endif %} 
+    {% endif %}
+    
+    {% set alreadyApplied = false %}
+    {% for application in mission.applications %}
+        {% if application.user == app.user %}
+            {% set alreadyApplied = true %}
+        {% endif %}
+    {% endfor %}
+
+    {% if app.user and 'ROLE_FREELANCE' in app.user.roles %}
+        {% if alreadyApplied %}
+            <p>Vous avez déjà postulé à cette mission.</p>
+        {% else %}
+            <a href="{{ path('app_application_new', {'id': mission.id}) }}">Postuler à cette mission</a>
+        {% endif %}
+    {% endif %}
+    <a href="{{ path('app_mission_index') }}">Retour à la liste des missions</a>
 {% endblock %}

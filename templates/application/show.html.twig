@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la candidature{% endblock %}
+
+{% block body %}
+    <h1>Détails de la candidature</h1>
+    <div>
+        <h2>Détails de la mission</h2>
+        <h3>{{ mission.title }}</h3>
+        <p>{{ mission.description }}</p>
+        <p>Budget : {{ mission.budget }} €</p>
+        <p>Date limite : {{ mission.deadline|date('d/m/Y') }}</p>
+        <p>Langue : {{ mission.language }}</p>
+
+    </div>
+    
+
+    <div>
+        <h3>Détails de la candidature</h3>
+        <p><strong>Motivation :</strong> {{ application.motivation }}</p>
+        <p><strong>URL du CV :</strong> {{ application.cvUrl }}</p>
+        <p><strong>Date de création :</strong> {{ application.createdAt|date('d/m/Y H:i:s') }}</p>
+        <p><strong>Statut :</strong> {{ application.statusApplication.label }}</p>
+        <p><strong>Mission :</strong> {{ application.mission.title }}</p>
+    </div>
+    
+{% endblock %}
