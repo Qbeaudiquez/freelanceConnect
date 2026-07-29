@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class MissionController extends AbstractController
 {
     #[Route('/mission/new', name: 'app_mission_new')]
-    // #[IsGranted('ROLE_CLIENT')]
+    #[IsGranted('ROLE_CLIENT')]
     public function new(Request $request, EntityManagerInterface $emi): Response
     {
         $mission = new Mission();
