@@ -2,14 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\MissionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Repository\ArchiveMissionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: MissionRepository::class)]
-class Mission
+#[ORM\Entity(repositoryClass: ArchiveMissionRepository::class)]
+class ArchiveMission
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -40,31 +38,16 @@ class Mission
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $archived_at = null;
+
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?StatusMission $status_mission = null;
 
-    #[ORM\ManyToOne(inversedBy: 'mission')]
+    #[ORM\ManyToOne(inversedBy: 'archiveMissions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user_id = null;
-
-    /**
-     * @var Collection<int, Application>
-     */
-    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'mission', orphanRemoval: true)]
-    private Collection $applications;
-
-    /**
-     * @var Collection<int, Invoice>
-     */
-    #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'mission', orphanRemoval: true)]
-    private Collection $invoices;
-
-    public function __construct()
-    {
-        $this->applications = new ArrayCollection();
-        $this->invoices = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -167,6 +150,18 @@ class Mission
         return $this;
     }
 
+    public function getArchivedAt(): ?\DateTimeImmutable
+    {
+        return $this->archived_at;
+    }
+
+    public function setArchivedAt(\DateTimeImmutable $archived_at): static
+    {
+        $this->archived_at = $archived_at;
+
+        return $this;
+    }
+
     public function getStatusMission(): ?StatusMission
     {
         return $this->status_mission;
@@ -187,66 +182,6 @@ class Mission
     public function setUserId(?User $user_id): static
     {
         $this->user_id = $user_id;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Application>
-     */
-    public function getApplications(): Collection
-    {
-        return $this->applications;
-    }
-
-    public function addApplication(Application $application): static
-    {
-        if (!$this->applications->contains($application)) {
-            $this->applications->add($application);
-            $application->setMission($this);
-        }
-
-        return $this;
-    }
-
-    public function removeApplication(Application $application): static
-    {
-        if ($this->applications->removeElement($application)) {
-            // set the owning side to null (unless already changed)
-            if ($application->getMission() === $this) {
-                $application->setMission(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Invoice>
-     */
-    public function getInvoices(): Collection
-    {
-        return $this->invoices;
-    }
-
-    public function addInvoice(Invoice $invoice): static
-    {
-        if (!$this->invoices->contains($invoice)) {
-            $this->invoices->add($invoice);
-            $invoice->setMission($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInvoice(Invoice $invoice): static
-    {
-        if ($this->invoices->removeElement($invoice)) {
-            // set the owning side to null (unless already changed)
-            if ($invoice->getMission() === $this) {
-                $invoice->setMission(null);
-            }
-        }
 
         return $this;
     }

@@ -55,10 +55,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Mission::class, mappedBy: 'user_id')]
     private Collection $missions;
 
+    /**
+     * @var Collection<int, Application>
+     */
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'user_id', orphanRemoval: true)]
+    private Collection $applications;
+
+    /**
+     * @var Collection<int, ArchiveMission>
+     */
+    #[ORM\OneToMany(targetEntity: ArchiveMission::class, mappedBy: 'user_id', orphanRemoval: true)]
+    private Collection $archiveMissions;
+
     public function __construct()
     {
         $this->links = new ArrayCollection();
         $this->missions = new ArrayCollection();
+        $this->applications = new ArrayCollection();
+        $this->archiveMissions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -232,6 +246,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($mission->getUserId() === $this) {
                 $mission->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Application>
+     */
+    public function getApplications(): Collection
+    {
+        return $this->applications;
+    }
+
+    public function addApplication(Application $application): static
+    {
+        if (!$this->applications->contains($application)) {
+            $this->applications->add($application);
+            $application->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApplication(Application $application): static
+    {
+        if ($this->applications->removeElement($application)) {
+            // set the owning side to null (unless already changed)
+            if ($application->getUserId() === $this) {
+                $application->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ArchiveMission>
+     */
+    public function getArchiveMissions(): Collection
+    {
+        return $this->archiveMissions;
+    }
+
+    public function addArchiveMission(ArchiveMission $archiveMission): static
+    {
+        if (!$this->archiveMissions->contains($archiveMission)) {
+            $this->archiveMissions->add($archiveMission);
+            $archiveMission->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArchiveMission(ArchiveMission $archiveMission): static
+    {
+        if ($this->archiveMissions->removeElement($archiveMission)) {
+            // set the owning side to null (unless already changed)
+            if ($archiveMission->getUserId() === $this) {
+                $archiveMission->setUserId(null);
             }
         }
 
