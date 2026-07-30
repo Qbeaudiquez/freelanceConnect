@@ -19,9 +19,10 @@ class MissionRepository extends ServiceEntityRepository
     public function findFiveLatestMissionsPending(): array
     {
         return $this->createQueryBuilder('m')
-            ->andWhere('m.status_mission = :status')
-            ->setParameter('status', 1) // 1 = "en attente"
-            ->orderBy('m.id', 'DESC')
+            ->join('m.status_mission', 's')
+            ->andWhere('s.label = :label')
+            ->setParameter('label', 'en attente de freelance')
+            ->orderBy('m.created_at', 'DESC')
             ->setMaxResults(5)
             ->getQuery()
             ->getResult();
@@ -50,7 +51,7 @@ class MissionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    
+
     public function countMissionsByLabel(string $label): int
     {
         return (int) $this->createQueryBuilder('m')
