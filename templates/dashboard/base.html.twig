@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>{{ app.user.firstname }} {{ app.user.lastname }}</h1>
+    <p>
+        {%- if is_granted('ROLE_ADMIN') -%}
+            Administrateur
+        {%- elseif is_granted('ROLE_CLIENT') -%}
+            Client
+        {%- else -%}
+            Freelance
+        {%- endif -%}
+    </p>
+
+    {% block dashboard_body %}{% endblock %}
+{% endblock %}

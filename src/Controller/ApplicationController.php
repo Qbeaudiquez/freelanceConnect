@@ -6,7 +6,6 @@ use App\Entity\Application;
 use App\Entity\Mission;
 use App\Entity\StatusApplication;
 use App\Entity\StatusMission;
-use App\Entity\User;
 use App\Form\ApplicationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

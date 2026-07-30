@@ -1,0 +1,15 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Client Dashboard{% endblock %}
+
+{% block dashboard_body %}
+<ul>
+    {% for mission in missions %}
+        <li>
+            <h2>{{ mission.title }}</h2>
+            <p>{{ mission.description }}</p>
+            <a href="{{ path('app_mission_show', {'id': mission.id}) }}">Voir la mission</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

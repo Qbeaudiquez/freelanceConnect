@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Mission;
 use App\Entity\StatusMission;
-use App\Entity\User;
 use App\Form\MissionType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -84,7 +83,7 @@ class MissionController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route('/missions', name: 'app_mission_index')]
+    #[Route('/missions', name: 'app_missions')]
     public function index(EntityManagerInterface $emi): Response
     {
         return $this->render('mission/index.html.twig', [

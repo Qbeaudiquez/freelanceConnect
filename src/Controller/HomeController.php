@@ -14,7 +14,7 @@ final class HomeController extends AbstractController
     public function index(EntityManagerInterface $emi): Response
     {
         return $this->render('home/index.html.twig', [
-            'missions' => $emi->getRepository(Mission::class)->findFiveLatestMissions(),
+            'missions' => $emi->getRepository(Mission::class)->findFiveLatestMissionsPending(),
         ]);
     }
 }

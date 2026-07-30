@@ -44,7 +44,7 @@ class Mission
     #[ORM\JoinColumn(nullable: false)]
     private ?StatusMission $status_mission = null;
 
-    #[ORM\ManyToOne(inversedBy: 'mission')]
+    #[ORM\ManyToOne(inversedBy: 'missions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 

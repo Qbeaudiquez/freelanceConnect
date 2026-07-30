@@ -48,25 +48,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Link>
      */
-    #[ORM\OneToMany(targetEntity: Link::class, mappedBy: 'user_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Link::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $links;
 
     /**
      * @var Collection<int, Mission>
      */
-    #[ORM\OneToMany(targetEntity: Mission::class, mappedBy: 'user_id')]
+    #[ORM\OneToMany(targetEntity: Mission::class, mappedBy: 'user')]
     private Collection $missions;
 
     /**
      * @var Collection<int, Application>
      */
-    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'user_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Application::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $applications;
 
     /**
      * @var Collection<int, ArchiveMission>
      */
-    #[ORM\OneToMany(targetEntity: ArchiveMission::class, mappedBy: 'user_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: ArchiveMission::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $archiveMissions;
 
     public function __construct()
@@ -206,7 +206,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->links->contains($link)) {
             $this->links->add($link);
-            $link->setUserId($this);
+            $link->setUser($this);
         }
 
         return $this;
@@ -216,8 +216,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->links->removeElement($link)) {
             // set the owning side to null (unless already changed)
-            if ($link->getUserId() === $this) {
-                $link->setUserId(null);
+            if ($link->getUser() === $this) {
+                $link->setUser(null);
             }
         }
 
@@ -266,7 +266,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->applications->contains($application)) {
             $this->applications->add($application);
-            $application->setUserId($this);
+            $application->setUser($this);
         }
 
         return $this;
@@ -276,8 +276,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->applications->removeElement($application)) {
             // set the owning side to null (unless already changed)
-            if ($application->getUserId() === $this) {
-                $application->setUserId(null);
+            if ($application->getUser() === $this) {
+                $application->setUser(null);
             }
         }
 
@@ -296,7 +296,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->archiveMissions->contains($archiveMission)) {
             $this->archiveMissions->add($archiveMission);
-            $archiveMission->setUserId($this);
+            $archiveMission->setUser($this);
         }
 
         return $this;
@@ -306,8 +306,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->archiveMissions->removeElement($archiveMission)) {
             // set the owning side to null (unless already changed)
-            if ($archiveMission->getUserId() === $this) {
-                $archiveMission->setUserId(null);
+            if ($archiveMission->getUser() === $this) {
+                $archiveMission->setUser(null);
             }
         }
 

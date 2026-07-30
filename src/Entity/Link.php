@@ -52,12 +52,12 @@ class Link
         return $this;
     }
 
-    public function getUserId(): ?User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUserId(?User $user_id): static
+    public function setUser(?User $user_id): static
     {
         $this->user = $user_id;
 

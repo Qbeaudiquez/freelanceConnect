@@ -1,0 +1,20 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block title %}Freelance Dashboard{% endblock %}
+
+{% block dashboard_body %}
+    <h2>Vos candidatures</h2>
+    <ul>
+        {% for application in applications %}
+            <li>
+                <h3>{{ application.mission.title }}</h3>
+                <p>{{ application.mission.description }}</p>
+                <p>Status : {{ application.statusApplication.label }}</p>
+                <a href="{{ path('app_application_show', {'id': application.id}) }}">Voir la candidature</a>
+            </li>
+        {% else %}
+            <li>Aucune candidature trouvée.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+

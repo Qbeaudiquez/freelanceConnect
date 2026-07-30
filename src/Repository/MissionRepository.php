@@ -16,9 +16,11 @@ class MissionRepository extends ServiceEntityRepository
         parent::__construct($registry, Mission::class);
     }
 
-    public function findFiveLatestMissions(): array
+    public function findFiveLatestMissionsPending(): array
     {
         return $this->createQueryBuilder('m')
+            ->andWhere('m.status_mission = :status')
+            ->setParameter('status', 1) // 1 = "en attente"
             ->orderBy('m.id', 'DESC')
             ->setMaxResults(5)
             ->getQuery()
@@ -30,7 +32,7 @@ class MissionRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('m')
             ->join('m.status_mission', 's')
             ->andWhere('s.label = :label')
-            ->setParameter('label', 'en attente de freelance')
+            ->setParameter('label', 'en attente')
             ->orderBy('m.created_at', 'DESC')
             ->setMaxResults(50)
             ->getQuery()
