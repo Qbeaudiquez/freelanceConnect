@@ -23,7 +23,7 @@ class MissionController extends AbstractController
         $form->handleRequest($request);
 
         $statusEnAttente = $emi->getRepository(StatusMission::class)
-            ->findOneBy(['label' => 'en attente']);
+            ->findOneBy(['label' => 'en attente de freelance']);
         $mission->setStatusMission($statusEnAttente);
         $mission->setAdvanceRate(0);
         $mission->setCreatedAt(new \DateTimeImmutable());
