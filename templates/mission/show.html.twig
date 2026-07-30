@@ -33,5 +33,10 @@
             <a href="{{ path('app_application_new', {'id': mission.id}) }}">Postuler à cette mission</a>
         {% endif %}
     {% endif %}
+    {% if app.user and (mission.user == app.user or is_granted('ROLE_FREELANCE')) %}
+    <a href="{{ path('app_message_index', {'id': mission.id}) }}" class="btn">
+        Messagerie
+    </a>
+    {% endif %}
     <a href="{{ path('app_missions') }}">Retour à la liste des missions</a>
 {% endblock %}

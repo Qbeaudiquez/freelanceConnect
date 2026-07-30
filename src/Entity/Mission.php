@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: MissionRepository::class)]
 class Mission
@@ -17,18 +18,21 @@ class Mission
     private ?int $id = null;
 
     #[ORM\Column(length: 150)]
+    #[Groups(['mission_read'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Groups(['mission_read'])]
     private ?float $budget = null;
 
     #[ORM\Column]
     private ?\DateTime $deadline = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['mission_read'])]
     private ?string $language = null;
 
     #[ORM\Column]
@@ -38,6 +42,7 @@ class Mission
     private ?int $advance_paid = null;
 
     #[ORM\Column]
+    #[Groups(['mission_read'])]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\ManyToOne]

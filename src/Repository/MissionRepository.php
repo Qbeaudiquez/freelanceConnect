@@ -32,9 +32,21 @@ class MissionRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('m')
             ->join('m.status_mission', 's')
             ->andWhere('s.label = :label')
-            ->setParameter('label', 'en attente')
+            ->setParameter('label', 'en attente de freelance')
             ->orderBy('m.created_at', 'DESC')
             ->setMaxResults(50)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findRecentMissions(): array
+    {
+        return $this->createQueryBuilder('m')
+            ->join('m.status_mission', 's')
+            ->andWhere('s.label = :label')
+            ->setParameter('label', 'en attente de freelance')
+            ->orderBy('m.created_at', 'DESC')
+            ->setMaxResults(5)
             ->getQuery()
             ->getResult();
     }
