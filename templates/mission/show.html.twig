@@ -3,21 +3,29 @@
 {% block title %}Voir la mission{% endblock %}
 
 {% block body %}
-    <h1>{{ mission.title }}</h1>
-    <p>{{ mission.description }}</p>
-    <p>Budget : {{ mission.budget }} €</p>
-    <p>Date limite : {{ mission.deadline|date('d/m/Y') }}</p>
-    <p>Langue : {{ mission.language }}</p>
-    <p>Statut : {{ mission.statusMission.label }}</p>
+<div class="container py-4">
+    <h1 class="mb-3">{{ mission.title }}</h1>
 
-    {% if app.user and app.user.id == mission.user.id and mission.statusMission.label == 'en attente' %} 
-        <a href="{{ path('app_mission_edit', {'id': mission.id}) }}">Modifier la mission</a>
-        <form method="post" action="{{ path('app_mission_delete', {'id': mission.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette mission ?');">
-            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ mission.id) }}">
-            <input type="hidden" name="redirect" value="app_home">
-            <button class="btn">Supprimer la mission</button>
-        </form>
-        <a href="{{ path('app_mission_applications', {'id': mission.id}) }}">Voir les candidatures</a>
+    <div class="card mb-4">
+        <div class="card-body">
+            <p>{{ mission.description }}</p>
+            <p><strong>Budget :</strong> {{ mission.budget }} €</p>
+            <p><strong>Date limite :</strong> {{ mission.deadline|date('d/m/Y') }}</p>
+            <p><strong>Langue :</strong> {{ mission.language }}</p>
+            <p><strong>Statut :</strong> {{ mission.statusMission.label }}</p>
+        </div>  
+    </div>
+
+    {% if app.user and app.user.id == mission.user.id and mission.statusMission.label == 'en attente de freelance' %}
+        <div class="mb-3">
+            <a href="{{ path('app_mission_edit', {'id': mission.id}) }}" class="btn btn-secondary">Modifier la mission</a>
+            <a href="{{ path('app_mission_applications', {'id': mission.id}) }}" class="btn btn-info">Voir les candidatures</a>
+            <form method="post" action="{{ path('app_mission_delete', {'id': mission.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette mission ?');" class="d-inline">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ mission.id) }}">
+                <input type="hidden" name="redirect" value="app_home">
+                <button class="btn btn-danger">Supprimer la mission</button>
+            </form>
+        </div>
     {% endif %}
     
     {% set alreadyApplied = false %}
@@ -29,15 +37,18 @@
 
     {% if app.user and 'ROLE_FREELANCE' in app.user.roles %}
         {% if alreadyApplied %}
-            <p>Vous avez déjà postulé à cette mission.</p>
+            <p class="text-muted">Vous avez déjà postulé à cette mission.</p>
         {% else %}
-            <a href="{{ path('app_application_new', {'id': mission.id}) }}">Postuler à cette mission</a>
+            <a href="{{ path('app_application_new', {'id': mission.id}) }}" class="btn btn-primary">Postuler à cette mission</a>
         {% endif %}
     {% endif %}
+
     {% if app.user and (mission.user == app.user or is_granted('ROLE_FREELANCE')) %}
-    <a href="{{ path('app_message_index', {'id': mission.id}) }}" class="btn">
-        Messagerie
-    </a>
+        <a href="{{ path('app_message_index', {'id': mission.id}) }}" class="btn btn-success">Messagerie</a>
     {% endif %}
-    <a href="{{ path('app_missions') }}">Retour à la liste des missions</a>
+    
+    <div class="mt-4">
+        <a href="{{ path('app_missions') }}" class="btn btn-outline-secondary">Retour à la liste des missions</a>
+    </div>
+</div>
 {% endblock %}

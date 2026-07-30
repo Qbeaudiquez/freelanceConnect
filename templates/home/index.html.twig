@@ -4,23 +4,23 @@
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
-    <h1>Bienvenue sur FreelanceConnect</h1>
-    <h2>Liste des 5 dernières missions</h2>
-    <ul>
+<div class="container py-4">
+    <h1 class="mb-4">Bienvenue sur FreelanceConnect</h1>
+    <h2 class="h4 mb-3">Les 5 dernières missions</h2>
+    <div class="list-group mb-3">
         {% for mission in missions %}
-            <li>
-                <a href="{{ path('app_mission_show', {'id': mission.id}) }}">{{ mission.title }}</a>
-                - Budget : {{ mission.budget }} €
-                - Date limite : {{ mission.deadline|date('d/m/Y') }}
-                - Langue : {{ mission.language }}
-            </li>
+            <a href="{{ path('app_mission_show', {'id': mission.id}) }}" class="list-group-item list-group-item-action">
+                <strong>{{ mission.title }}</strong>
+                — Budget : {{ mission.budget }} €
+                — Date limite : {{ mission.deadline|date('d/m/Y') }}
+                — Langue : {{ mission.language }}
         {% else %}
-            <li>Aucune mission disponible pour le moment.</li>
-            {% set isMissions = false %}
+            <p>Aucune mission disponible pour le moment.</p>
         {% endfor %}
-    </ul>
-    {% if isMissions %}
-        <a href="{{ path('app_missions') }}">Voir toutes les missions</a>
+    </div>
+
+    {% if missions is not empty %}
+        <a href="{{ path('app_missions') }}" class="btn btn-primary">Voir toutes les missions</a>
     {% endif %}
-    
+</div>
 {% endblock %}

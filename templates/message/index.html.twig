@@ -3,23 +3,32 @@
 {% block title %}Messagerie — {{ mission.title }}{% endblock %}
 
 {% block body %}
-    <h1>Messagerie</h1>
-    <h2>{{ mission.title }}</h2>
+<div class="container py-4">
+    <h1 class="mb-1">Messagerie</h1>
+    <h2 class="h5 text-muted mb-4">{{ mission.title }}</h2>
 
-    <div class="messages">
+    <div class="mb-4">
         {% for message in messages %}
-            <div class="message">
-                <strong>{{ message.sender.firstname }} {{ message.sender.lastname }}</strong>
-                <span class="message-date">{{ message.sentAt|date('d/m/Y H:i') }}</span>
-                <p>{{ message.content }}</p>
+            <div class="card mb-2">
+                <div class="card-body py-2">
+                    <div class="d-flex justify-content-between">
+                        <strong>{{ message.sender.firstname }} {{ message.sender.lastname }}</strong>
+                        <small class="text-muted">{{ message.sentAt|date('d/m/Y H:i') }}</small>
+                    </div>
+                    <p class="mb-0">{{ message.content }}</p>
+                </div>
             </div>
         {% else %}
-            <p>Aucun message pour le moment. Démarrez la conversation !</p>
+            <p class="text-muted">Aucun message pour le moment. Démarrez la conversation !</p>
         {% endfor %}
     </div>
-    <form method="post" class="message-form" data-turbo="false">
+
+    <form method="post" data-turbo="false">
         <input type="hidden" name="_token" value="{{ csrf_token('send_message') }}">
-        <textarea name="content" rows="3" placeholder="Votre message..." required></textarea>
-        <button type="submit">Envoyer</button>
+        <div class="mb-2">
+            <textarea name="content" rows="3" class="form-control" placeholder="Votre message..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Envoyer</button>
     </form>
+</div>
 {% endblock %}

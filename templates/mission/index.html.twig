@@ -3,19 +3,20 @@
 {% block title %}Liste des missions{% endblock %}
 
 {% block body %}
-    <h1>Liste des missions</h1>
-    <ul>
+<div class="container py-4">
+    <h1 class="mb-4">Liste des missions</h1>
+
+    <div class="list-group">
         {% for mission in missions %}
-        {% if mission.statusMission.label == 'en attente de freelance' %}
-            <li>
-                <a href="{{ path('app_mission_show', {'id': mission.id}) }}">{{ mission.title }}</a>
-                - Budget : {{ mission.budget }} €
-                - Date limite : {{ mission.deadline|date('d/m/Y') }}
-                - Langue : {{ mission.language }}
-            </li>
-        {% endif %}
+            <a href="{{ path('app_mission_show', {'id': mission.id}) }}" class="list-group-item list-group-item-action">
+                <strong>{{ mission.title }}</strong>
+                — Budget : {{ mission.budget }} €
+                — Date limite : {{ mission.deadline|date('d/m/Y') }}
+                — Langue : {{ mission.language }}
+            </a>
         {% else %}
-            <li>Aucune mission disponible pour le moment.</li>
+            <p>Aucune mission disponible pour le moment.</p>
         {% endfor %}
-    </ul>
+    </div>
+</div>
 {% endblock %}
