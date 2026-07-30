@@ -14,6 +14,7 @@
         <a href="{{ path('app_mission_edit', {'id': mission.id}) }}">Modifier la mission</a>
         <form method="post" action="{{ path('app_mission_delete', {'id': mission.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette mission ?');">
             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ mission.id) }}">
+            <input type="hidden" name="redirect" value="app_home">
             <button class="btn">Supprimer la mission</button>
         </form>
         <a href="{{ path('app_mission_applications', {'id': mission.id}) }}">Voir les candidatures</a>

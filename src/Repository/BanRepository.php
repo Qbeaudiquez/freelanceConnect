@@ -16,6 +16,17 @@ class BanRepository extends ServiceEntityRepository
         parent::__construct($registry, Ban::class);
     }
 
+    public function isBanned(string $email, string $ip): bool
+    {
+        return null !== $this->createQueryBuilder('b')
+            ->andWhere('b.email = :email OR b.ip = :ip')
+            ->setParameter('email', $email)
+            ->setParameter('ip', $ip)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return Ban[] Returns an array of Ban objects
 //     */

@@ -50,6 +50,17 @@ class MissionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    
+    public function countMissionsByLabel(string $label): int
+    {
+        return (int) $this->createQueryBuilder('m')
+            ->select('COUNT(m.id)')
+            ->join('m.status_mission', 's')
+            ->andWhere('s.label = :label')
+            ->setParameter('label', $label)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
 //    /**
 //     * @return Mission[] Returns an array of Mission objects
