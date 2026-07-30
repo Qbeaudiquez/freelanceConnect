@@ -6,7 +6,7 @@
     <h1>Liste des missions</h1>
     <ul>
         {% for mission in missions %}
-        {% if mission.statusMission.label == 'en attente' %}
+        {% if mission.statusMission.label == 'en attente de freelance' %}
             <li>
                 <a href="{{ path('app_mission_show', {'id': mission.id}) }}">{{ mission.title }}</a>
                 - Budget : {{ mission.budget }} €
