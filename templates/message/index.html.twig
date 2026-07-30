@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Messagerie — {{ mission.title }}{% endblock %}
+
+{% block body %}
+    <h1>Messagerie</h1>
+    <h2>{{ mission.title }}</h2>
+
+    <div class="messages">
+        {% for message in messages %}
+            <div class="message">
+                <strong>{{ message.sender.firstname }} {{ message.sender.lastname }}</strong>
+                <span class="message-date">{{ message.sentAt|date('d/m/Y H:i') }}</span>
+                <p>{{ message.content }}</p>
+            </div>
+        {% else %}
+            <p>Aucun message pour le moment. Démarrez la conversation !</p>
+        {% endfor %}
+    </div>
+    <form method="post" class="message-form" data-turbo="false">
+        <input type="hidden" name="_token" value="{{ csrf_token('send_message') }}">
+        <textarea name="content" rows="3" placeholder="Votre message..." required></textarea>
+        <button type="submit">Envoyer</button>
+    </form>
+{% endblock %}
