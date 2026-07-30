@@ -3,6 +3,34 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block dashboard_body %}
-    <p>Total Users: {{ usersCount }}</p>
-    <p>Total Missions: {{ missionsCount }}</p>
+<div>
+    <h2>Total Users: {{ usersCount }}</h2>
+    <p>Total Clients: {{ clientsCount }}</p>
+    <p>Total Freelances: {{ freelancesCount }}</p>
+    <a href="{{ path('app_dashboard_admin_users') }}">Voir la liste des utilisateurs</a>
+</div>
+<div>
+    <h2>Total Missions: {{ missionsCount }}</h2>
+    <p>Missions en attente: {{ missionsPendingCount }} </p>
+    <p>Missions terminées: {{ missionsTerminatedCount }}</p>
+</div>
+    
+    
+    <div>
+        <h2>Liste des missions</h2>
+        <ul>
+            {% for mission in missions %}
+                <li>
+                    <h3>{{ mission.title }}</h3>
+                    <p>{{ mission.description }}</p>
+                    <form method="post" action="{{ path('app_mission_delete', {'id': mission.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette mission ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ mission.id) }}">
+                    <input type="hidden" name="redirect" value="app_dashboard_admin">
+                    <button class="btn btn-danger">Supprimer</button>
+                    </form>
+                </li>
+                
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}

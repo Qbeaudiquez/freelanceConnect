@@ -80,7 +80,12 @@ class MissionController extends AbstractController
         $emi->remove($mission);
         $emi->flush();
 
-        return $this->redirectToRoute('app_home');
+        $redirect = $request->request->get('redirect', 'app_home');
+        if (!in_array($redirect, ['app_dashboard_client', 'app_dashboard_admin'], true)) {
+            $redirect = 'app_dashboard_client';
+        }
+
+        return $this->redirectToRoute($redirect);
     }
 
     #[Route('/missions', name: 'app_missions')]
