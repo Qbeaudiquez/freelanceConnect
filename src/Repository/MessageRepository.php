@@ -6,6 +6,7 @@ use App\Entity\Message;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Mission;
+use App\Entity\User;
 
 /**
  * @extends ServiceEntityRepository<Message>
@@ -25,6 +26,19 @@ class MessageRepository extends ServiceEntityRepository
             ->orderBy('m.sentAt', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+
+    public function countUnreadForMission(Mission $mission, User $user): int
+    {
+        return (int) $this->createQueryBuilder('m')
+            ->select('COUNT(m.id)')
+            ->andWhere('m.mission = :mission')
+            ->andWhere('m.sender != :user')
+            ->andWhere('m.readAt IS NULL')
+            ->setParameter('mission', $mission)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
 //    /**

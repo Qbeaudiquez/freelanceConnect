@@ -3,16 +3,26 @@
 {% block title %}Client Dashboard{% endblock %}
 
 {% block dashboard_body %}
-<ul>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Vos missions</h2>
+        <a href="{{ path('app_mission_new') }}" class="btn btn-success">Créer une nouvelle mission</a>
+    </div>
+
     {% for mission in missions %}
-        <li>
-            <h2>{{ mission.title }}</h2>
-            <p>{{ mission.description }}</p>
-            <a href="{{ path('app_mission_show', {'id': mission.id}) }}">Voir la mission</a>
-        </li>
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h3 class="h5">{{ mission.title }}</h3>
+                    <span class="badge bg-info">{{ mission.statusMission.label }}</span>
+                </div>
+                <p>{{ mission.description }}</p>
+                <a href="{{ path('app_mission_show', {'id': mission.id}) }}" class="btn btn-primary btn-sm">Voir la mission</a>
+                <a href="{{ path('app_message_index', {'id': mission.id}) }}" class="btn btn-outline-primary btn-sm">Voir la messagerie</a>
+            </div>
+        </div>
     {% else %}
-        <li>Aucune mission trouvée.</li>
+        <p class="text-muted">Aucune mission trouvée.</p>
     {% endfor %}
-</ul>
-<button class="btn btn-primary"><a href="{{ path('app_mission_new') }}" style="color: white; text-decoration: none;">Créer une nouvelle mission</a></button>
+</div>
 {% endblock %}
