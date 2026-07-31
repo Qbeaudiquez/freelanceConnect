@@ -58,7 +58,14 @@
     {% endif %}
 
     {% if app.user and (mission.user == app.user or isAcceptedFreelance) %}
-        <a href="{{ path('app_message_index', {'id': mission.id}) }}" class="btn btn-success">Messagerie</a>
+        <a href="{{ path('app_message_index', {'id': mission.id}) }}" class="btn btn-success position-relative">
+            Messagerie
+            {% if unreadCount > 0 %}
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ unreadCount }}
+                </span>
+            {% endif %}
+        </a>
     {% elseif app.user and 'ROLE_FREELANCE' in app.user.roles %}
         <button type="button" class="btn btn-secondary"
                 onclick="alert('Vous devez être accepté sur cette mission pour échanger avec ce client.');">

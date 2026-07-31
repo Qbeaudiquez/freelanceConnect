@@ -13,7 +13,9 @@
                 <p><strong>Statut :</strong> {{ application.statusApplication.label }}</p>
                 <a href="{{ path('app_mission_show', {'id': application.mission.id}) }}" class="btn btn-primary btn-sm">Voir la mission</a>
                 <a href="{{ path('app_application_show', {'id': application.id}) }}" class="btn btn-outline-primary btn-sm">Voir la candidature</a>
-            </div>
+                {% if application.statusApplication.label == 'acceptée' %}
+                    <a href="{{ path('app_message_index', {'id': application.mission.id}) }}" class="btn btn-outline-success btn-sm">Voir la messagerie</a>
+                {% endif %}
         </div>
     {% else %}
         <p class="text-muted">Aucune candidature trouvée.</p>

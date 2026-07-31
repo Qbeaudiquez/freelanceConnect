@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use \Symfony\Component\Form\FormError;
+use App\Repository\MessageRepository;
 
 class MissionController extends AbstractController
 {
@@ -51,10 +52,16 @@ class MissionController extends AbstractController
     }
 
     #[Route('/mission/{id}', name: 'app_mission_show')]
-    public function show(Mission $mission): Response
+    public function show(Mission $mission, MessageRepository $messageRepository): Response
     {
+        $unreadCount = 0;
+        if ($this->getUser()) {
+            $unreadCount = $messageRepository->countUnreadForMission($mission, $this->getUser());
+        }
+
         return $this->render('mission/show.html.twig', [
             'mission' => $mission,
+            'unreadCount' => $unreadCount,
         ]);
     }
 
