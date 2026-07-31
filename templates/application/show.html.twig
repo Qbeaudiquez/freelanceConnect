@@ -41,6 +41,17 @@
                 <a href="{{ application.cvUrl }}" target="_blank" rel="noopener noreferrer">{{ application.cvUrl }}</a>
             </p>
             <p class="mb-0"><strong>Date de création :</strong> {{ application.createdAt|date('d/m/Y H:i:s') }}</p>
+
+            {% if application.links|length > 0 %}
+                <h3 class="h6 mt-3">Liens projets</h3>
+                <ul class="list-unstyled mb-0">
+                    {% for link in application.links %}
+                        <li>
+                            <p class="mb-1">{{ link.label }} : <a href="{{ link.url }}" target="_blank">{{ link.url }}</a></p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
     </div>
 

@@ -31,6 +31,18 @@
                 </div>
                 <p class="text-muted mb-2">{{ acceptedApplication.user.email }}</p>
                 <p>{{ acceptedApplication.motivation }}</p>
+
+                {% if acceptedApplication.links|length > 0 %}
+                    <h3 class="h6 mt-3">Liens projets</h3>
+                    <ul class="list-unstyled">
+                        {% for link in acceptedApplication.links %}
+                            <li>
+                                <p class="mb-1">{{ link.label }} : <a href="{{ link.url }}" target="_blank">{{ link.url }}</a></p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
                 <a href="{{ path('app_application_show', {'id': acceptedApplication.id}) }}" class="btn btn-outline-primary btn-sm">Voir le détail</a>
             </div>
         </div>

@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Repository\CategoryRepository;
 use App\Repository\MissionRepository;
 use App\Repository\UserRepository;
+use App\Repository\LinkRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,13 +99,14 @@ class UserController extends AbstractController
 
     #[Route('/dashboard/freelance', name: 'app_dashboard_freelance')]
     #[IsGranted('ROLE_FREELANCE')]
-    public function dashboardFreelance(): Response
+    public function dashboardFreelance(LinkRepository $linkRepository): Response
     {
         /** @var User $user */
         $user = $this->getUser();
 
         return $this->render('dashboard/freelance.html.twig', [
             'applications' => $user->getApplications(),
+            'links' => $linkRepository->findByUserId($user->getId()),
         ]);
     }
 }

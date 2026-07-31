@@ -8,6 +8,11 @@
     {{ form_start(form) }}
         {{ form_row(form.motivation) }}
         {{ form_row(form.cv_url) }}
+        {% if form.links.vars.choices|length > 0 %}
+            {{ form_row(form.links) }}
+        {% else %}
+            <p class="text-muted">Vous n'avez aucun lien projet à joindre. Vous pouvez en ajouter depuis votre dashboard.</p>
+        {% endif %}
         <button class="btn btn-primary">Postuler</button>
     {{ form_end(form) }}
 {% endblock %}
