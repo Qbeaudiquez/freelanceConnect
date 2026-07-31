@@ -21,6 +21,13 @@ Projet réalisé à deux sur une semaine, avec pour objectif un MVP de plateform
 - On est restés sur MySQL pour la messagerie au lieu de MongoDB, pour gagner du temps et se concentrer sur les fonctionnalités.
 - Le statut d'une mission est en auto à la création (ouvert), le user ne le choisit pas.
 
+## Ce qu'on n'a pas eu le temps de faire
+- Le reinit du mdp demandait trop de temps sur la fin, on a préféré priorisé le bon fonctionnement des autres fonctionnalités.
+- Une mission peut aller jusqu'au stade de la facturation (crée en bdd mais pas de facture envoyé).
+- Les archives de mission ont été crée en bdd mais on a pas eu le temps de l'implémenter.
+- Idem que les archives pour les filtres (tri pour missions), elles sont déjà en bdd par défaut.
+- On a pu faire les 2 premiers endpoints publiques.
+
 ## Ce que nous retenons
 
 - Il faut fixer l'environnement (versions, config) AVANT de commencer à coder, sinon
