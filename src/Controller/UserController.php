@@ -40,7 +40,7 @@ class UserController extends AbstractController
             'clientsCount' => $userRepository->countByRole('ROLE_CLIENT'),
             'freelancesCount' => $userRepository->countByRole('ROLE_FREELANCE'),
             'missionsCount' => $missionRepository->count([]),
-            'missionsPendingCount' => $missionRepository->countMissionsByLabel('en attente'),
+            'missionsPendingCount' => $missionRepository->countMissionsByLabel('en attente de freelance'),
             'missionsTerminatedCount' => $missionRepository->countMissionsByLabel('terminée'),
             'missions' => $missionRepository->findAll(),
             'categories' => $categoryRepository->findAll(),

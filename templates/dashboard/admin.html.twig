@@ -3,54 +3,136 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block dashboard_body %}
-<div>
-    <h2>Total Users: {{ usersCount }}</h2>
-    <p>Total Clients: {{ clientsCount }}</p>
-    <p>Total Freelances: {{ freelancesCount }}</p>
-    <a href="{{ path('app_dashboard_admin_users') }}">Voir la liste des utilisateurs</a>
-</div>
-<div>
-    <h2>Total Missions: {{ missionsCount }}</h2>
-    <p>Missions en attente: {{ missionsPendingCount }} </p>
-    <p>Missions terminées: {{ missionsTerminatedCount }}</p>
-</div>
-    
-    
-    <div>
-        <h2>Liste des missions</h2>
-        <ul>
-            {% for mission in missions %}
-                <li>
-                    <h3>{{ mission.title }}</h3>
-                    <p>{{ mission.description }}</p>
-                    <form method="post" action="{{ path('app_mission_delete', {'id': mission.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette mission ?');">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ mission.id) }}">
-                    <input type="hidden" name="redirect" value="app_dashboard_admin">
-                    <button class="btn btn-danger">Supprimer</button>
-                    </form>
-                </li>
-                
-            {% endfor %}
-        </ul>
+    <div class="row g-3 mb-4">
+        <div class="col-sm-6 col-lg-3">
+            <div class="card text-bg-primary h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="small text-uppercase opacity-75">Utilisateurs</div>
+                            <div class="fs-2 fw-bold">{{ usersCount }}</div>
+                        </div>
+                        <i class="bi bi-people fs-1 opacity-50"></i>
+                    </div>
+                </div>
+                <a href="{{ path('app_dashboard_admin_users') }}" class="card-footer text-white text-decoration-none d-flex align-items-center justify-content-between">
+                    Voir la liste
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="small text-uppercase text-muted">Clients</div>
+                            <div class="fs-2 fw-bold">{{ clientsCount }}</div>
+                        </div>
+                        <i class="bi bi-person-badge fs-1 text-primary opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="small text-uppercase text-muted">Freelances</div>
+                            <div class="fs-2 fw-bold">{{ freelancesCount }}</div>
+                        </div>
+                        <i class="bi bi-briefcase fs-1 text-primary opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="small text-uppercase text-muted">Missions</div>
+                            <div class="fs-2 fw-bold">{{ missionsCount }}</div>
+                        </div>
+                        <i class="bi bi-kanban fs-1 text-primary opacity-50"></i>
+                    </div>
+                    <div class="mt-2 d-flex gap-2">
+                        <span class="badge text-bg-warning">{{ missionsPendingCount }} en attente</span>
+                        <span class="badge text-bg-success">{{ missionsTerminatedCount }} terminées</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div>
-        <h2>Liste des catégories</h2>
-        <ul>
-            {% for category in categories %}
-                <li>
-                    <h3>{{ category.label }}</h3>
-                    <form method="post" action="{{ path('app_category_delete', {'id': category.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
-                        <input type="hidden" name="redirect" value="app_dashboard_admin">
-                        <button class="btn btn-danger">Supprimer</button>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card shadow-sm h-100" style="max-height: 55vh;">
+                <div class="card-header bg-white d-flex align-items-center justify-content-between">
+                    <h2 class="h5 mb-0"><i class="bi bi-kanban me-2"></i>Liste des missions</h2>
+                    <span class="badge text-bg-secondary">{{ missions|length }}</span>
+                </div>
+                <ul class="list-group list-group-flush flex-grow-1" style="overflow-y: auto; min-height: 0;">
+                    {% for mission in missions %}
+                    
+                        <li class="list-group-item list-group-item-action mission-row d-flex align-items-start justify-content-between gap-3" style="cursor: pointer;" data-href="{{ path('app_mission_show', {'id': mission.id}) }}">
+                            <div>
+                                <h3 class="h6 mb-1">{{ mission.title }}</h3>
+                                <p class="mb-0 text-muted small">{{ mission.description }}</p>
+                            </div>
+                            <form method="post" action="{{ path('app_mission_delete', {'id': mission.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette mission ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ mission.id) }}">
+                                <input type="hidden" name="redirect" value="app_dashboard_admin">
+                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="list-group-item text-muted">Aucune mission trouvée.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card shadow-sm h-100" style="max-height: 55vh;">
+                <div class="card-header bg-white d-flex align-items-center justify-content-between">
+                    <h2 class="h5 mb-0"><i class="bi bi-tags me-2"></i>Liste des catégories</h2>
+                    <span class="badge text-bg-secondary">{{ categories|length }}</span>
+                </div>
+                <ul class="list-group list-group-flush flex-grow-1" style="overflow-y: auto; min-height: 0;">
+                    {% for category in categories %}
+                        <li class="list-group-item d-flex align-items-center justify-content-between">
+                            <span>{{ category.label }}</span>
+                            <form method="post" action="{{ path('app_category_delete', {'id': category.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                                <input type="hidden" name="redirect" value="app_dashboard_admin">
+                                <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="list-group-item text-muted">Aucune catégorie trouvée.</li>
+                    {% endfor %}
+                </ul>
+                <div class="card-footer bg-white">
+                    <form method="post" action="{{ path('app_category_new') }}" class="d-flex gap-2">
+                        <input type="text" name="label" class="form-control form-control-sm" placeholder="Nom de la catégorie" required>
+                        <input type="hidden" name="_token" value="{{ csrf_token('new_category') }}">
+                        <button class="btn btn-sm btn-success text-nowrap"><i class="bi bi-plus-lg me-1"></i>Créer</button>
                     </form>
-                </li>
-            {% endfor %}
-        </ul>
-        <form method="post" action="{{ path('app_category_new') }}">
-            <input type="text" name="label" placeholder="Nom de la catégorie" required>
-            <input type="hidden" name="_token" value="{{ csrf_token('new_category') }}">
-            <button class="btn btn-success">Créer une catégorie</button>
-        </form>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        document.querySelectorAll('.mission-row').forEach(function (row) {
+            row.addEventListener('click', function (event) {
+                if (event.target.closest('form')) {
+                    return;
+                }
+                window.location.href = row.dataset.href;
+            });
+        });
+    </script>
 {% endblock %}

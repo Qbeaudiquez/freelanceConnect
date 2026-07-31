@@ -3,31 +3,51 @@
 {% block title %}Liste des utilisateurs{% endblock %}
 
 {% block dashboard_body %}
-    <h2>Liste des utilisateurs</h2>
-    <ul>
-        {% for user in users %}
-            <li>
-                <h3>{{ user.firstname }} {{ user.lastname }}</h3>
-                <p>Email : {{ user.email }}</p>
-                <p>Rôle :
-                    {% if 'ROLE_ADMIN' in user.roles %}
-                        Administrateur
-                    {% elseif 'ROLE_CLIENT' in user.roles %}
-                        Client
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex align-items-center justify-content-between">
+            <h2 class="h5 mb-0"><i class="bi bi-people me-2"></i>Liste des utilisateurs</h2>
+            <span class="badge text-bg-secondary">{{ users|length }}</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Rôle</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.firstname }} {{ user.lastname }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if 'ROLE_ADMIN' in user.roles %}
+                                    <span class="badge text-bg-danger">Administrateur</span>
+                                {% elseif 'ROLE_CLIENT' in user.roles %}
+                                    <span class="badge text-bg-primary">Client</span>
+                                {% else %}
+                                    <span class="badge text-bg-info text-dark">Freelance</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                {% if app.user != user %}
+                                    <form method="post" action="{{ path('app_dashboard_admin_user_ban', {'id': user.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir bannir cet utilisateur ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('ban' ~ user.id) }}">
+                                        <button class="btn btn-sm btn-outline-danger"><i class="bi bi-slash-circle me-1"></i>Bannir</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
                     {% else %}
-                        Freelance
-                    {% endif %}
-                </p>
-                {% if app.user != user %}
-                    <form method="post" action="{{ path('app_dashboard_admin_user_ban', {'id': user.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir bannir cet utilisateur ?');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('ban' ~ user.id) }}">
-                        <button class="btn btn-danger">Bannir</button>
-                    </form>
-                {% endif %}
-            </li>
-            
-        {% else %}
-            <li>Aucun utilisateur trouvé.</li>
-        {% endfor %}
-    </ul>
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">Aucun utilisateur trouvé.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}

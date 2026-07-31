@@ -13,6 +13,13 @@
             <p><strong>Date limite :</strong> {{ mission.deadline|date('d/m/Y') }}</p>
             <p><strong>Langue :</strong> {{ mission.language }}</p>
             <p><strong>Statut :</strong> {{ mission.statusMission.label }}</p>
+            {% if mission.categories %}
+                <div>
+                    {% for category in mission.categories %}
+                        <span class="badge bg-secondary">{{ category.label }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>  
     </div>
 
