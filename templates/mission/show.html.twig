@@ -57,6 +57,22 @@
         {% endif %}
     {% endif %}
 
+    {% if app.user and isAcceptedFreelance and mission.statusMission.label == 'en cours' %}
+        <form method="post" action="{{ path('app_mission_complete', {'id': mission.id}) }}" class="d-inline"
+              onsubmit="return confirm('Marquer cette mission comme terminée ?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('complete' ~ mission.id) }}">
+            <button class="btn btn-warning">Marquer comme terminée</button>
+        </form>
+    {% endif %}
+
+    {% if app.user and mission.user == app.user and mission.statusMission.label == 'terminée' %}
+        <form method="post" action="{{ path('app_mission_invoice', {'id': mission.id}) }}" class="d-inline"
+              onsubmit="return confirm('Valider et facturer cette mission ?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('invoice' ~ mission.id) }}">
+            <button class="btn btn-primary">Valider et facturer</button>
+        </form>
+    {% endif %}
+
     {% if app.user and (mission.user == app.user or isAcceptedFreelance) %}
         <a href="{{ path('app_message_index', {'id': mission.id}) }}" class="btn btn-success position-relative">
             Messagerie
