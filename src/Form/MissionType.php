@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Category;
 use App\Entity\Mission;
 use App\Entity\StatusMission;
 use App\Entity\User;
@@ -35,6 +36,14 @@ class MissionType extends AbstractType
             ])
             ->add('language', TextType::class, [
                 'label' => 'Langue',
+            ])
+            ->add('categories', EntityType::class, [
+                'class' => Category::class,
+                'choice_label' => 'label',
+                'label' => 'Catégories',
+                'multiple' => true,
+                'expanded' => true,
+                'mapped' => false,
             ])
         ;
     }

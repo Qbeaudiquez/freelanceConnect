@@ -5,12 +5,13 @@
 {% block body %}
     <h1>Modifier une mission</h1>
 
-    {{ form_start(form) }}
+    {{ form_start(form, {attr: {'data-turbo': 'false'}}) }}
         {{ form_row(form.title) }}
         {{ form_row(form.description) }}
         {{ form_row(form.budget) }}
         {{ form_row(form.deadline) }}
         {{ form_row(form.language) }}
+        {{ form_row(form.categories) }}
         <button class="btn btn-primary">Modifier</button>
     {{ form_end(form) }}
 {% endblock %}

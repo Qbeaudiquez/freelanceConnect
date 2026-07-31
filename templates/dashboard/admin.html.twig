@@ -33,4 +33,24 @@
             {% endfor %}
         </ul>
     </div>
+    <div>
+        <h2>Liste des catégories</h2>
+        <ul>
+            {% for category in categories %}
+                <li>
+                    <h3>{{ category.label }}</h3>
+                    <form method="post" action="{{ path('app_category_delete', {'id': category.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                        <input type="hidden" name="redirect" value="app_dashboard_admin">
+                        <button class="btn btn-danger">Supprimer</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+        <form method="post" action="{{ path('app_category_new') }}">
+            <input type="text" name="label" placeholder="Nom de la catégorie" required>
+            <input type="hidden" name="_token" value="{{ csrf_token('new_category') }}">
+            <button class="btn btn-success">Créer une catégorie</button>
+        </form>
+    </div>
 {% endblock %}

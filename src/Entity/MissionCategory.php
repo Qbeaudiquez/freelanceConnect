@@ -17,7 +17,7 @@ class MissionCategory
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'missionCategories')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Mission $mission = null;
 

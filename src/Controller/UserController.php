@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Ban;
 use App\Entity\User;
+use App\Repository\CategoryRepository;
 use App\Repository\MissionRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,7 +33,7 @@ class UserController extends AbstractController
 
     #[Route('/dashboard/admin', name: 'app_dashboard_admin')]
     #[IsGranted('ROLE_ADMIN')]
-    public function dashboardAdmin(UserRepository $userRepository, MissionRepository $missionRepository): Response
+    public function dashboardAdmin(UserRepository $userRepository, MissionRepository $missionRepository, CategoryRepository $categoryRepository): Response
     {
         return $this->render('dashboard/admin.html.twig', [
             'usersCount' => $userRepository->count([]),
@@ -42,6 +43,7 @@ class UserController extends AbstractController
             'missionsPendingCount' => $missionRepository->countMissionsByLabel('en attente'),
             'missionsTerminatedCount' => $missionRepository->countMissionsByLabel('terminée'),
             'missions' => $missionRepository->findAll(),
+            'categories' => $categoryRepository->findAll(),
         ]);
     }
 

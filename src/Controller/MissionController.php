@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Mission;
+use App\Entity\MissionCategory;
 use App\Entity\StatusMission;
 use App\Form\MissionType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -36,6 +37,8 @@ class MissionController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->syncCategories($mission, $form->get('categories')->getData());
+
             $emi->persist($mission);
             $emi->flush();
 
@@ -60,9 +63,12 @@ class MissionController extends AbstractController
     public function edit(Request $request, Mission $mission, EntityManagerInterface $emi): Response
     {
         $form = $this->createForm(MissionType::class, $mission);
+        $form->get('categories')->setData($mission->getCategories()->toArray());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->syncCategories($mission, $form->get('categories')->getData());
+
             $emi->flush();
 
             return $this->redirectToRoute('app_mission_show', ['id' => $mission->getId()]);
@@ -72,6 +78,26 @@ class MissionController extends AbstractController
             'form' => $form,
             'mission' => $mission,
         ]);
+    }
+
+    private function syncCategories(Mission $mission, iterable $selectedCategories): void
+    {
+        $selectedCategories = is_array($selectedCategories) ? $selectedCategories : iterator_to_array($selectedCategories);
+
+        foreach ($mission->getMissionCategories()->toArray() as $missionCategory) {
+            if (!in_array($missionCategory->getCategory(), $selectedCategories, true)) {
+                $mission->removeMissionCategory($missionCategory);
+            }
+        }
+
+        $existingCategories = $mission->getCategories();
+        foreach ($selectedCategories as $category) {
+            if (!$existingCategories->contains($category)) {
+                $missionCategory = new MissionCategory();
+                $missionCategory->setCategory($category);
+                $mission->addMissionCategory($missionCategory);
+            }
+        }
     }
 
     #[Route('/mission/{id}/delete', name: 'app_mission_delete', methods: ['POST'])]

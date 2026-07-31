@@ -68,10 +68,24 @@ class Mission
     #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'mission', orphanRemoval: true)]
     private Collection $invoices;
 
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'mission', orphanRemoval: true)]
+    private Collection $messages;
+
+    /**
+     * @var Collection<int, MissionCategory>
+     */
+    #[ORM\OneToMany(targetEntity: MissionCategory::class, mappedBy: 'mission', orphanRemoval: true, cascade: ['persist'])]
+    private Collection $missionCategories;
+
     public function __construct()
     {
         $this->applications = new ArrayCollection();
         $this->invoices = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+        $this->missionCategories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -257,5 +271,73 @@ class Mission
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): static
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setMission($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): static
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getMission() === $this) {
+                $message->setMission(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MissionCategory>
+     */
+    public function getMissionCategories(): Collection
+    {
+        return $this->missionCategories;
+    }
+
+    public function addMissionCategory(MissionCategory $missionCategory): static
+    {
+        if (!$this->missionCategories->contains($missionCategory)) {
+            $this->missionCategories->add($missionCategory);
+            $missionCategory->setMission($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMissionCategory(MissionCategory $missionCategory): static
+    {
+        if ($this->missionCategories->removeElement($missionCategory)) {
+            // set the owning side to null (unless already changed)
+            if ($missionCategory->getMission() === $this) {
+                $missionCategory->setMission(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->missionCategories->map(fn (MissionCategory $missionCategory) => $missionCategory->getCategory());
     }
 }
