@@ -35,6 +35,13 @@
         {% endif %}
     {% endfor %}
 
+    {% set isAcceptedFreelance = false %}
+    {% for application in mission.applications %}
+        {% if application.user == app.user and application.statusApplication.label == 'acceptée' %}
+            {% set isAcceptedFreelance = true %}
+        {% endif %}
+    {% endfor %}
+
     {% if app.user and 'ROLE_FREELANCE' in app.user.roles %}
         {% if alreadyApplied %}
             <p class="text-muted">Vous avez déjà postulé à cette mission.</p>
@@ -43,8 +50,13 @@
         {% endif %}
     {% endif %}
 
-    {% if app.user and (mission.user == app.user or is_granted('ROLE_FREELANCE')) %}
+    {% if app.user and (mission.user == app.user or isAcceptedFreelance) %}
         <a href="{{ path('app_message_index', {'id': mission.id}) }}" class="btn btn-success">Messagerie</a>
+    {% elseif app.user and 'ROLE_FREELANCE' in app.user.roles %}
+        <button type="button" class="btn btn-secondary"
+                onclick="alert('Vous devez être accepté sur cette mission pour échanger avec ce client.');">
+            Messagerie
+        </button>
     {% endif %}
     
     <div class="mt-4">
