@@ -3,18 +3,21 @@
 {% block title %}Freelance Dashboard{% endblock %}
 
 {% block dashboard_body %}
-    <h2>Vos candidatures</h2>
-    <ul>
-        {% for application in applications %}
-            <li>
-                <h3>{{ application.mission.title }}</h3>
+<div class="container py-4">
+    <h2 class="mb-4">Vos candidatures</h2>
+    {% for application in applications %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h3 class="h5">{{ application.mission.title }}</h3>
                 <p>{{ application.mission.description }}</p>
-                <p>Status : {{ application.statusApplication.label }}</p>
-                <a href="{{ path('app_application_show', {'id': application.id}) }}">Voir la candidature</a>
-            </li>
-        {% else %}
-            <li>Aucune candidature trouvée.</li>
-        {% endfor %}
-    </ul>
+                <p><strong>Statut :</strong> {{ application.statusApplication.label }}</p>
+                <a href="{{ path('app_mission_show', {'id': application.mission.id}) }}" class="btn btn-primary btn-sm">Voir la mission</a>
+                <a href="{{ path('app_application_show', {'id': application.id}) }}" class="btn btn-outline-primary btn-sm">Voir la candidature</a>
+            </div>
+        </div>
+    {% else %}
+        <p class="text-muted">Aucune candidature trouvée.</p>
+    {% endfor %}
+</div>
 {% endblock %}
 
