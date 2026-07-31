@@ -51,6 +51,13 @@ class MessageController extends AbstractController
 
         $messages = $messageRepository->findByMission($mission);
 
+        foreach ($messages as $message) {
+            if ($message->getSender() !== $this->getUser() && $message->getReadAt() === null) {
+                $message->setReadAt(new \DateTimeImmutable());
+            }
+        }
+        $em->flush();
+
         return $this->render('message/index.html.twig', [
             'mission' => $mission,
             'messages' => $messages,
