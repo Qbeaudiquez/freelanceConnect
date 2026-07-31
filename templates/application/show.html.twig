@@ -3,22 +3,47 @@
 {% block title %}Détails de la candidature{% endblock %}
 
 {% block body %}
-    <h1>Détails de la candidature</h1>
-    <div>
-        <h2>Mission</h2>
-        <h3>{{ mission.title }}</h3>
-        <p>{{ mission.description }}</p>
-        <p>Budget : {{ mission.budget }} €</p>
-        <p>Date limite : {{ mission.deadline|date('d/m/Y') }}</p>
-        <p>Langue : {{ mission.language }}</p>
+{% set statusLabel = application.statusApplication.label %}
+{% set statusBadge = {
+    'en attente': 'bg-warning text-dark',
+    'acceptée': 'bg-success',
+    'rejetée': 'bg-danger',
+    'refusée': 'bg-danger',
+} %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+        <h1 class="mb-0">Détails de la candidature</h1>
+        <span class="badge {{ statusBadge[statusLabel]|default('bg-secondary') }} fs-6">{{ statusLabel }}</span>
     </div>
-    
-    <div>
-        <h2>Candidature</h2>
-        <p><strong>Motivation :</strong> {{ application.motivation }}</p>
-        <p><strong>URL du CV :</strong> {{ application.cvUrl }}</p>
-        <p><strong>Date de création :</strong> {{ application.createdAt|date('d/m/Y H:i:s') }}</p>
-        <p><strong>Statut :</strong> {{ application.statusApplication.label }}</p>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2 class="h5 mb-0">Mission</h2>
+        </div>
+        <div class="card-body">
+            <h3 class="h5">{{ mission.title }}</h3>
+            <p>{{ mission.description }}</p>
+            <p><strong>Budget :</strong> {{ mission.budget }} €</p>
+            <p><strong>Date limite :</strong> {{ mission.deadline|date('d/m/Y') }}</p>
+            <p class="mb-0"><strong>Langue :</strong> {{ mission.language }}</p>
+        </div>
     </div>
-    <a href="{{ path('app_dashboard_' ~ roleSlug) }}">Retour au dashboard</a>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2 class="h5 mb-0">Candidature</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Motivation :</strong></p>
+            <p>{{ application.motivation }}</p>
+            <p>
+                <strong>CV :</strong>
+                <a href="{{ application.cvUrl }}" target="_blank" rel="noopener noreferrer">{{ application.cvUrl }}</a>
+            </p>
+            <p class="mb-0"><strong>Date de création :</strong> {{ application.createdAt|date('d/m/Y H:i:s') }}</p>
+        </div>
+    </div>
+
+    <a href="{{ path('app_dashboard_' ~ roleSlug) }}" class="btn btn-outline-secondary">Retour au dashboard</a>
+</div>
 {% endblock %}

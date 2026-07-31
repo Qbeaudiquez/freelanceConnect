@@ -3,7 +3,14 @@
 {% block title %}Candidatures - {{ mission.title }}{% endblock %}
 
 {% block body %}
-    <h1>Candidatures pour "{{ mission.title }}"</h1>
+{% set statusBadge = {
+    'en attente': 'bg-warning text-dark',
+    'acceptée': 'bg-success',
+    'rejetée': 'bg-danger',
+    'refusée': 'bg-danger',
+} %}
+<div class="container py-4">
+    <h1 class="mb-4">Candidatures pour « {{ mission.title }} »</h1>
 
     {% set acceptedApplication = null %}
     {% for application in applications %}
@@ -13,14 +20,20 @@
     {% endfor %}
 
     {% if acceptedApplication %}
-        <ul>
-            <li>
-                <p><strong>{{ acceptedApplication.user.firstname }} {{ acceptedApplication.user.lastname }}</strong> ({{ acceptedApplication.user.email }})</p>
+        <div class="card border-success mb-4">
+            <div class="card-header bg-success bg-opacity-25">
+                <strong>Candidature retenue</strong>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+                    <h2 class="h5 mb-0">{{ acceptedApplication.user.firstname }} {{ acceptedApplication.user.lastname }}</h2>
+                    <span class="badge {{ statusBadge[acceptedApplication.statusApplication.label]|default('bg-secondary') }}">{{ acceptedApplication.statusApplication.label }}</span>
+                </div>
+                <p class="text-muted mb-2">{{ acceptedApplication.user.email }}</p>
                 <p>{{ acceptedApplication.motivation }}</p>
-                <p>Statut : {{ acceptedApplication.statusApplication.label }}</p>
-                <a href="{{ path('app_application_show', {'id': acceptedApplication.id}) }}">Voir le détail</a>
-            </li>
-        </ul>
+                <a href="{{ path('app_application_show', {'id': acceptedApplication.id}) }}" class="btn btn-outline-primary btn-sm">Voir le détail</a>
+            </div>
+        </div>
     {% else %}
         {% set pendingApplications = [] %}
         {% for application in applications %}
@@ -30,29 +43,38 @@
         {% endfor %}
 
         {% if pendingApplications|length == 0 %}
-            <p>Aucune candidature pour le moment.</p>
+            <p class="text-muted">Aucune candidature pour le moment.</p>
         {% else %}
-            <ul>
+            <div class="d-flex flex-column gap-3">
                 {% for application in pendingApplications %}
-                    <li>
-                        <p><strong>{{ application.user.firstname }} {{ application.user.lastname }}</strong> ({{ application.user.email }})</p>
-                        <p>{{ application.motivation }}</p>
-                        <p>Statut : {{ application.statusApplication.label }}</p>
-                        <a href="{{ path('app_application_show', {'id': application.id}) }}">Voir le détail</a>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+                                <h2 class="h5 mb-0">{{ application.user.firstname }} {{ application.user.lastname }}</h2>
+                                <span class="badge {{ statusBadge[application.statusApplication.label]|default('bg-secondary') }}">{{ application.statusApplication.label }}</span>
+                            </div>
+                            <p class="text-muted mb-2">{{ application.user.email }}</p>
+                            <p>{{ application.motivation }}</p>
 
-                        <form method="post" action="{{ path('app_application_validate', {'id': application.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir valider cette candidature ?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('validate' ~ application.id) }}">
-                            <button class="btn btn-success">Valider la candidature</button>
-                        </form>
-                        <form method="post" action="{{ path('app_application_reject', {'id': application.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir rejeter cette candidature ?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('reject' ~ application.id) }}">
-                            <button class="btn btn-danger">Rejeter la candidature</button>
-                        </form>
-                    </li>
+                            <div class="d-flex align-items-center flex-wrap gap-2">
+                                <a href="{{ path('app_application_show', {'id': application.id}) }}" class="btn btn-outline-primary btn-sm">Voir le détail</a>
+
+                                <form method="post" action="{{ path('app_application_validate', {'id': application.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir valider cette candidature ?');" class="d-inline">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('validate' ~ application.id) }}">
+                                    <button class="btn btn-success btn-sm">Valider la candidature</button>
+                                </form>
+                                <form method="post" action="{{ path('app_application_reject', {'id': application.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir rejeter cette candidature ?');" class="d-inline">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('reject' ~ application.id) }}">
+                                    <button class="btn btn-danger btn-sm">Rejeter la candidature</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 {% endfor %}
-            </ul>
+            </div>
         {% endif %}
     {% endif %}
 
-    <a href="{{ path('app_mission_show', {'id': mission.id}) }}">Retour à la mission</a>
+    <a href="{{ path('app_mission_show', {'id': mission.id}) }}" class="btn btn-outline-secondary mt-4">Retour à la mission</a>
+</div>
 {% endblock %}
