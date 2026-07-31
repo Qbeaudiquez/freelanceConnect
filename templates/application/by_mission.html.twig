@@ -42,11 +42,11 @@
 
                         <form method="post" action="{{ path('app_application_validate', {'id': application.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir valider cette candidature ?');">
                             <input type="hidden" name="_token" value="{{ csrf_token('validate' ~ application.id) }}">
-                            <button class="btn">Valider la candidature</button>
+                            <button class="btn btn-success">Valider la candidature</button>
                         </form>
                         <form method="post" action="{{ path('app_application_reject', {'id': application.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir rejeter cette candidature ?');">
                             <input type="hidden" name="_token" value="{{ csrf_token('reject' ~ application.id) }}">
-                            <button class="btn">Rejeter la candidature</button>
+                            <button class="btn btn-danger">Rejeter la candidature</button>
                         </form>
                     </li>
                 {% endfor %}

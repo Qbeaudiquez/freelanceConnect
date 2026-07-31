@@ -65,9 +65,18 @@ class ApplicationController extends AbstractController
             throw $this->createAccessDeniedException('Cette candidature ne vous concerne pas.');
         }
 
+        $role = $this->getUser()->getRoles()[0];
+        $roleSlug = match ($role) {
+            'ROLE_FREELANCE' => 'freelance',
+            'ROLE_CLIENT'    => 'client',
+            'ROLE_ADMIN'     => 'admin',
+            default          => 'user',
+        };
+
         return $this->render('application/show.html.twig', [
             'application' => $application,
             'mission' => $application->getMission(),
+            'roleSlug' => $roleSlug,
         ]);
     }
 
