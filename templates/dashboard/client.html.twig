@@ -10,6 +10,9 @@
             <p>{{ mission.description }}</p>
             <a href="{{ path('app_mission_show', {'id': mission.id}) }}">Voir la mission</a>
         </li>
+    {% else %}
+        <li>Aucune mission trouvée.</li>
     {% endfor %}
 </ul>
+<button class="btn btn-primary"><a href="{{ path('app_mission_new') }}" style="color: white; text-decoration: none;">Créer une nouvelle mission</a></button>
 {% endblock %}
