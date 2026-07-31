@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MissionRepository::class)]
 class Mission
@@ -26,9 +27,11 @@ class Mission
 
     #[ORM\Column]
     #[Groups(['mission_read'])]
+    #[Assert\Type(type: ['int', 'float'], message: 'Le budget doit être un nombre.')]
     private ?float $budget = null;
 
     #[ORM\Column]
+    #[Assert\GreaterThan('today', message: 'La date limite doit être postérieure à aujourd\'hui.')]
     private ?\DateTime $deadline = null;
 
     #[ORM\Column(length: 50)]

@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use \Symfony\Component\Form\FormError;
 
 class MissionController extends AbstractController
 {
@@ -29,6 +30,10 @@ class MissionController extends AbstractController
         $mission->setCreatedAt(new \DateTimeImmutable());
         $user = $this->getUser();
         $mission->setUser($user);
+
+        if ($form->isSubmitted() && $mission->getBudget() < 0) {
+            $form->get('budget')->addError(new FormError('Le budget doit être un nombre positif.'));
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $emi->persist($mission);

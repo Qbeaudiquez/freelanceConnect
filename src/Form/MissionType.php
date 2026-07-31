@@ -27,6 +27,7 @@ class MissionType extends AbstractType
             ])
             ->add('budget', NumberType::class, [
                 'label' => 'Budget',
+                'invalid_message' => 'Le budget doit être un nombre.',
             ])
             ->add('deadline', DateType::class, [
                 'label' => 'Date limite',
