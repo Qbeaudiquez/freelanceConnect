@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ApplicationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,6 +36,17 @@ class Application
     #[ORM\ManyToOne(inversedBy: 'applications')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+
+    /**
+     * @var Collection<int, Link>
+     */
+    #[ORM\ManyToMany(targetEntity: Link::class)]
+    private Collection $links;
+
+    public function __construct()
+    {
+        $this->links = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -108,6 +121,30 @@ class Application
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Link>
+     */
+    public function getLinks(): Collection
+    {
+        return $this->links;
+    }
+
+    public function addLink(Link $link): static
+    {
+        if (!$this->links->contains($link)) {
+            $this->links->add($link);
+        }
+
+        return $this;
+    }
+
+    public function removeLink(Link $link): static
+    {
+        $this->links->removeElement($link);
 
         return $this;
     }

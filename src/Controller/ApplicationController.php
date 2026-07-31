@@ -6,6 +6,7 @@ use App\Entity\Application;
 use App\Entity\Mission;
 use App\Entity\StatusApplication;
 use App\Entity\StatusMission;
+use App\Entity\User;
 use App\Form\ApplicationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,11 +31,13 @@ class ApplicationController extends AbstractController
             return $this->redirectToRoute('app_mission_show', ['id' => $mission->getId()]);
         }
 
+        /** @var User $user */
+        $user = $this->getUser();
+
         $application = new Application();
-        $form = $this->createForm(ApplicationType::class, $application);
+        $form = $this->createForm(ApplicationType::class, $application, ['user' => $user]);
         $form->handleRequest($request);
 
-        $user = $this->getUser();
         $application->setUser($user);
         $application->setMission($mission);
         $application->setCreatedAt(new \DateTimeImmutable());
